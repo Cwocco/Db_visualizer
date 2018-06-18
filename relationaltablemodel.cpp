@@ -61,16 +61,17 @@ void initializeModel(QSqlRelationalTableModel *model)
 
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     //! [1]
-    model->setRelation(0, QSqlRelation("TMP", "TREATMENT_ID", "SHIFT_ID"));
+ //   model->setRelation(0, QSqlRelation("TMP", "TREATMENT_ID", "SHIFT_ID"));
     //! [1] //! [2]
-    model->setRelation(1, QSqlRelation("TMP", "TREATMENT_DT", "TREATMENT_DATE"));
+    //model->setRelation(1, QSqlRelation("TMP", "TREATMENT_DT", "TREATMENT_DATE"));
     //! [2]
-
+    //!
     //! [3]
     model->setHeaderData(0, Qt::Horizontal, QObject::tr("TREATMENT_ID"));
     model->setHeaderData(1, Qt::Horizontal, QObject::tr("SHIFT_ID"));
+    model->setHeaderData(2, Qt::Horizontal, QObject::tr("PILE_ID"));
+    model->setHeaderData(3, Qt::Horizontal, QObject::tr("TREATMENT_DT"));
 
-    //model->setHeaderData(2, Qt::Horizontal, QObject::tr("City"));
     //model->setHeaderData(3, Qt::Horizontal, QObject::tr("Country"));
     //! [3]
 
@@ -100,20 +101,35 @@ void createRelationalTables()
         throw std::runtime_error(l_errorMessage.toStdString());
     }
     else
-        qInfo() << "connected to samp";
-    QString l_selectQueryStr("SELECT TREATMENT_ID, SHIFT_ID FROM TREATMENT");
+    {
+        QSqlQuery l_dropQuery;
+        l_dropQuery.exec("DROP TABLE TMP");
+        l_dropQuery.finish();
+    }
+
+
+    QString l_selectQueryStr("SELECT * FROM TREATMENT");
     QSqlQuery l_selectQuery(l_selectQueryStr);
 
     while (l_selectQuery.next())
     {
         QSqlQuery test;
-        int t_id = l_selectQuery.value(0).toInt();
-        qInfo() << t_id;
-        int s_id = l_selectQuery.value(1).toInt();
-        test.exec("DROP TABLE IF EXISTS TMP");
-        test.exec("CREATE TABLE TMP (TREATMENT_ID INTEGER, SHIFT_ID INTEGER)");
-        QString yolo("INSERT INTO TMP (TREATMENT_ID, SHIFT_ID) VALUES ('"+QString::number(t_id)+"',"
-                    " '"+QString::number(s_id)+"')");
+        test.exec("CREATE TABLE TMP (TREATMENT_ID INTEGER, SHIFT_ID INTEGER, PILE_ID INTEGER, TREATMENT_DT,"
+                  " TREATMENT_DATE, DEPTH, STATE, LOCALISATION, PRODUCT_NAME, PRECONIZE_DOSAGE, QUANTITY, COMMENT)");
+        QString yolo("INSERT INTO TMP (TREATMENT_ID, SHIFT_ID, PILE_ID, TREATMENT_DT, TREATMENT_DATE,"
+                    "DEPTH, STATE, LOCALISATION, PRODUCT_NAME, PRECONIZE_DOSAGE, QUANTITY, COMMENT) VALUES "
+                    "('"+QString::number(l_selectQuery.value(0).toInt())+"',"
+                    " '"+QString::number(l_selectQuery.value(1).toInt())+"',"
+                    " '"+QString::number(l_selectQuery.value(2).toInt())+ "',"
+                    " '"+l_selectQuery.value(3).toString()+"',"
+                    " '"+l_selectQuery.value(4).toString()+"',"
+                    " '"+QString::number(l_selectQuery.value(5).toDouble())+"',"
+                    " '"+l_selectQuery.value(6).toString()+"',"
+                    " '"+l_selectQuery.value(7).toString()+"',"
+                    " '"+l_selectQuery.value(8).toString()+"',"
+                    " '"+l_selectQuery.value(9).toString()+"',"
+                    " '"+QString::number(l_selectQuery.value(10).toDouble())+"',"
+                    " '"+l_selectQuery.value(11).toString()+"');");
         qInfo() << yolo;
         if (test.exec(yolo))
             qInfo() << "CALLED";
