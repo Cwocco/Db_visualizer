@@ -1,36 +1,30 @@
 #ifndef CDBVISUALIZERSAMP_H
 #define CDBVISUALIZERSAMP_H
 
-#include <QSqlTableModel>
-#include <QSqlRelationalTableModel>
 #include <QTableView>
-#include <QtWidgets>
-#include <QtSql>
-#include <QSqlQuery>
+#include <QSqlRelationalTableModel>
+#include <memory>
 
 class CDbVisualizerSAMP
 {
 public:
     CDbVisualizerSAMP();
-    void init();
+    bool init();
     bool connect();
     QTableView *createView(const QString &title, QSqlTableModel *model) const;
-    void initializeModel(QSqlRelationalTableModel *model);
+    void initializeModel(QSqlRelationalTableModel *model, QString tableName);
 
 
+    void getData(QString tableName);
     void getTreatmentData();
     void getControlData();
     void getMeasuresData();
     void getProductionData();
 
-std::shared_ptr<CDbVisualizerSAMP> m_dbVisualizer;
+    //std::shared_ptr<CDbVisualizerSAMP> m_dbVisualizer;
 
 private:
 
 
-
-
-
 };
-
 #endif // CDBVISUALIZERSAMP_H
