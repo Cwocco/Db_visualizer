@@ -1,16 +1,25 @@
 #include "CDbVisualizerSAMP.h"
+#include "ui_CDbVisualizerSAMP.h"
 
-#include <QSqlDatabase>
-#include <QSqlRelationalTableModel>
-#include <QTableView>
-#include <QSqlQuery>
+#include <QtSql/QSqlDatabase>
+//#include <QtSql/QSqlRelationalTableModel>
+//#include <QTableView>
+#include <QtSql/QSqlQuery>
 #include <QDebug>
-#include <QSqlRelationalDelegate>
-#include <QSqlError>
+#include <QtSql/QSqlRelationalDelegate>
+#include <QtSql/QSqlError>
+#include <QtSql/QSqlQueryModel>
 
-CDbVisualizerSAMP::CDbVisualizerSAMP()
+CDbVisualizerSAMP::CDbVisualizerSAMP(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::CDbVisualizerSAMP)
 {
-    //m_dbVisualizer = std::make_shared<CDbVisualizerSAMP>();
+    ui->setupUi(this);
+}
+
+CDbVisualizerSAMP::~CDbVisualizerSAMP()
+{
+    delete ui;
 }
 
 bool CDbVisualizerSAMP::init()
@@ -33,7 +42,7 @@ bool CDbVisualizerSAMP::connect()
     return open;
 }
 
-void CDbVisualizerSAMP::initializeModel(QSqlRelationalTableModel *model, QString tableName)
+/*void CDbVisualizerSAMP::initializeModel(QSqlRelationalTableModel *model, QString tableName)
 {
     qDebug() << "initializeModel";
     model->setTable("TMP");
@@ -302,4 +311,58 @@ void CDbVisualizerSAMP::getProductionData()
         if (l_tmpQuery.lastError().isValid())
             qDebug() << l_tmpQuery.lastError();
     }
+}*/
+
+void CDbVisualizerSAMP::setModel(QSqlQueryModel *model, QSqlQuery *query) const
+{
+    qDebug() << "setModel";
+
+    model->setQuery(*query);
+    ui->tableView->setModel(model);
+    ui->tableView->resizeColumnsToContents();
+    ui->tableView->resizeRowsToContents();
+}
+
+void CDbVisualizerSAMP::getTableToDisplay(QString tableName, int event) const
+{
+    qDebug() << "getTableToDisplay";
+
+
+    QSqlDatabase l_db = QSqlDatabase::database();
+    if (!l_db.isOpen())
+    {
+       QString l_errorMessage = "Error : DB isn't opened ...";
+       qWarning() << l_errorMessage;
+       throw std::runtime_error(l_errorMessage.toStdString());
+    }
+    QSqlQueryModel *model = new QSqlQueryModel();
+    QSqlQuery *l_selectQuery = new QSqlQuery();
+
+    l_selectQuery->exec("SELECT * FROM '"+tableName+"'");
+    setModel(model, l_selectQuery);
+    if (event == 0)
+    {
+        model->clear();
+        ui->tableView->setModel(model);
+    }
+}
+
+void CDbVisualizerSAMP::on_checkBox_stateChanged(int arg1)
+{
+    getTableToDisplay("PRODUCTION", arg1);
+}
+
+void CDbVisualizerSAMP::on_checkBox_2_stateChanged(int arg1)
+{
+   getTableToDisplay("CONTROL", arg1);
+}
+
+void CDbVisualizerSAMP::on_checkBox_3_stateChanged(int arg1)
+{
+    getTableToDisplay("TREATMENT", arg1);
+}
+
+void CDbVisualizerSAMP::on_checkBox_4_stateChanged(int arg1)
+{
+    getTableToDisplay("MEASURES", arg1);
 }

@@ -1,14 +1,24 @@
 #ifndef CDBVISUALIZERSAMP_H
 #define CDBVISUALIZERSAMP_H
 
+#include <QMainWindow>
 #include <QTableView>
-#include <QSqlRelationalTableModel>
+#include <QHeaderView>
+#include <QtSql/QSqlRelationalTableModel>
 #include <memory>
 
-class CDbVisualizerSAMP
+namespace Ui {
+class CDbVisualizerSAMP;
+}
+
+class CDbVisualizerSAMP : public QMainWindow
 {
+    Q_OBJECT
+
 public:
-    CDbVisualizerSAMP();
+    explicit CDbVisualizerSAMP(QWidget *parent = 0);
+    ~CDbVisualizerSAMP();
+
     bool init();
     bool connect();
     QTableView *createView(const QString &title, QSqlTableModel *model) const;
@@ -20,11 +30,22 @@ public:
     void getControlData();
     void getMeasuresData();
     void getProductionData();
+    void setModel(QSqlQueryModel *model, QSqlQuery *query) const;
+    void getTableToDisplay(QString tableName, int event) const;
 
-    //std::shared_ptr<CDbVisualizerSAMP> m_dbVisualizer;
+
+private slots:
+
+    void on_checkBox_stateChanged(int arg1);
+
+    void on_checkBox_2_stateChanged(int arg1);
+
+    void on_checkBox_3_stateChanged(int arg1);
+
+    void on_checkBox_4_stateChanged(int arg1);
 
 private:
-
-
+    Ui::CDbVisualizerSAMP *ui;
 };
+
 #endif // CDBVISUALIZERSAMP_H
