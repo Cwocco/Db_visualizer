@@ -1,20 +1,25 @@
-#include <QCoreApplication>
 #include "CDbVisualizerSAMP.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
+    QApplication a(argc, argv);
     CDbVisualizerSAMP start;
-    QApplication app(argc, argv);
     if (!start.init())
         return EXIT_FAILURE;
-    start.getData("MEASURES");
+/*    start.getData("CONTROL");
     QSqlRelationalTableModel model;
 
-    start.initializeModel(&model, "MEASURES");
+    start.initializeModel(&model, "CONTROL");
 
     QScopedPointer<QTableView> view(start.createView(QObject::tr("Database visualizer for SAMP"), &model));
-    view->show();
+    view->resizeColumnsToContents();
+    view->resizeRowsToContents();
+    view->window()->resize(view->window()->width() * 1.5, view->window()->height() * 1.2);
+    view->contentsRect().left();*/
+    //view->show();
 
-    return app.exec();
+    start.show();
+
+    return a.exec();
 }
