@@ -2,23 +2,32 @@
 <ui version="4.0">
  <class>CDbVisualizerSAMP</class>
  <widget class="QMainWindow" name="CDbVisualizerSAMP">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>843</width>
+    <width>834</width>
     <height>458</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Samp database Visualizer</string>
   </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <property name="animated">
+   <bool>false</bool>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QTableView" name="tableView">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>10</y>
+      <y>20</y>
       <width>681</width>
       <height>401</height>
      </rect>
@@ -34,7 +43,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Production</string>
+     <string>Fabrication</string>
     </property>
    </widget>
    <widget class="QCheckBox" name="checkBox_2">
@@ -76,13 +85,26 @@
      <string>Mesures</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>720</x>
+      <y>20</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Type de données :</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>843</width>
+     <width>834</width>
      <height>21</height>
     </rect>
    </property>

@@ -1,5 +1,6 @@
 #include "CDbVisualizerSAMP.h"
 #include <QApplication>
+#include <QDebug>
 
 int main(int argc, char *argv[])
 {
@@ -19,6 +20,8 @@ int main(int argc, char *argv[])
     view->contentsRect().left();*/
     //view->show();
 
+    start.setFixedWidth(835);
+    start.setFixedHeight(460);
     start.show();
 
     return a.exec();

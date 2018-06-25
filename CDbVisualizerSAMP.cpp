@@ -31,7 +31,7 @@ bool CDbVisualizerSAMP::connect()
 {
     qDebug() << "Connect";
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("./samp.db");
+    db.setDatabaseName("C:/Users/alexis.dacunha/Desktop/SAMP/release/samp.db");
     bool open = db.open();
 
     if (open)
@@ -41,6 +41,85 @@ bool CDbVisualizerSAMP::connect()
 
     return open;
 }
+
+void CDbVisualizerSAMP::setModel(QSqlQueryModel *model, QSqlQuery *query) const
+{
+    qDebug() << "setModel";
+
+    model->setQuery(*query);
+    ui->tableView->setModel(model);
+    ui->tableView->resizeColumnsToContents();
+    ui->tableView->resizeRowsToContents();
+}
+
+void CDbVisualizerSAMP::getTableToDisplay(QString tableName, int event) const
+{
+    qDebug() << "getTableToDisplay";
+
+    QSqlDatabase l_db = QSqlDatabase::database();
+    if (!l_db.isOpen())
+    {
+       QString l_errorMessage = "Error : DB isn't opened ...";
+       qWarning() << l_errorMessage;
+       throw std::runtime_error(l_errorMessage.toStdString());
+    }
+    QSqlQueryModel *model = new QSqlQueryModel();
+    QSqlQuery *l_selectQuery = new QSqlQuery();
+
+    l_selectQuery->exec("SELECT * FROM '"+tableName+"'");
+    setModel(model, l_selectQuery);
+    //qDebug() << event;
+    if (event == 0)
+    {
+        model->clear();
+        ui->tableView->setModel(model);
+    }
+}
+
+bool CDbVisualizerSAMP::getState(QCheckBox *currentCheckBox, QCheckBox *toUncheck, QCheckBox *toUncheck2, QCheckBox *toUncheck3) const
+{
+    qInfo() << "getState";
+
+    bool ret = false;
+    if (currentCheckBox->isChecked())
+    {
+        ret = true;
+        toUncheck->setChecked(false);
+        toUncheck2->setChecked(false);
+        toUncheck3->setChecked(false);
+        //qDebug() << "Checkbox unchecked";
+    }
+    return ret;
+}
+
+void CDbVisualizerSAMP::on_checkBox_stateChanged(int arg1)
+{
+    bool isChecked = getState(ui->checkBox, ui->checkBox_2, ui->checkBox_3, ui->checkBox_4);
+    if (isChecked)
+        getTableToDisplay("PRODUCTION", arg1);
+}
+
+void CDbVisualizerSAMP::on_checkBox_2_stateChanged(int arg1)
+{
+   bool isChecked = getState(ui->checkBox_2, ui->checkBox, ui->checkBox_3, ui->checkBox_4);
+   if (isChecked)
+        getTableToDisplay("CONTROL", arg1);
+}
+
+void CDbVisualizerSAMP::on_checkBox_3_stateChanged(int arg1)
+{
+    bool isChecked = getState(ui->checkBox_3, ui->checkBox, ui->checkBox_2, ui->checkBox_4);
+    if (isChecked)
+        getTableToDisplay("TREATMENT", arg1);
+}
+
+void CDbVisualizerSAMP::on_checkBox_4_stateChanged(int arg1)
+{
+    bool isChecked = getState(ui->checkBox_4, ui->checkBox, ui->checkBox_2, ui->checkBox_3);
+    if (isChecked)
+        getTableToDisplay("MEASURES", arg1);
+}
+
 
 /*void CDbVisualizerSAMP::initializeModel(QSqlRelationalTableModel *model, QString tableName)
 {
@@ -313,56 +392,3 @@ void CDbVisualizerSAMP::getProductionData()
     }
 }*/
 
-void CDbVisualizerSAMP::setModel(QSqlQueryModel *model, QSqlQuery *query) const
-{
-    qDebug() << "setModel";
-
-    model->setQuery(*query);
-    ui->tableView->setModel(model);
-    ui->tableView->resizeColumnsToContents();
-    ui->tableView->resizeRowsToContents();
-}
-
-void CDbVisualizerSAMP::getTableToDisplay(QString tableName, int event) const
-{
-    qDebug() << "getTableToDisplay";
-
-
-    QSqlDatabase l_db = QSqlDatabase::database();
-    if (!l_db.isOpen())
-    {
-       QString l_errorMessage = "Error : DB isn't opened ...";
-       qWarning() << l_errorMessage;
-       throw std::runtime_error(l_errorMessage.toStdString());
-    }
-    QSqlQueryModel *model = new QSqlQueryModel();
-    QSqlQuery *l_selectQuery = new QSqlQuery();
-
-    l_selectQuery->exec("SELECT * FROM '"+tableName+"'");
-    setModel(model, l_selectQuery);
-    if (event == 0)
-    {
-        model->clear();
-        ui->tableView->setModel(model);
-    }
-}
-
-void CDbVisualizerSAMP::on_checkBox_stateChanged(int arg1)
-{
-    getTableToDisplay("PRODUCTION", arg1);
-}
-
-void CDbVisualizerSAMP::on_checkBox_2_stateChanged(int arg1)
-{
-   getTableToDisplay("CONTROL", arg1);
-}
-
-void CDbVisualizerSAMP::on_checkBox_3_stateChanged(int arg1)
-{
-    getTableToDisplay("TREATMENT", arg1);
-}
-
-void CDbVisualizerSAMP::on_checkBox_4_stateChanged(int arg1)
-{
-    getTableToDisplay("MEASURES", arg1);
-}
