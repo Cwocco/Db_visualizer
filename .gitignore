@@ -2,7 +2,6 @@
 *.pro.*
 Data/
 debug/
-release/
 Makefile.Debug
 Makefile.Release
 mocinclude.opt

@@ -6,6 +6,7 @@
 #include <QHeaderView>
 #include <QtSql/QSqlRelationalTableModel>
 #include <memory>
+#include <QCheckBox>
 
 namespace Ui {
 class CDbVisualizerSAMP;
@@ -18,6 +19,7 @@ class CDbVisualizerSAMP : public QMainWindow
 public:
     explicit CDbVisualizerSAMP(QWidget *parent = 0);
     ~CDbVisualizerSAMP();
+
 
     bool init();
     bool connect();
@@ -32,6 +34,7 @@ public:
     void getProductionData();
     void setModel(QSqlQueryModel *model, QSqlQuery *query) const;
     void getTableToDisplay(QString tableName, int event) const;
+    bool getState(QCheckBox *currentCheckBox, QCheckBox *toUncheck, QCheckBox *toUncheck2, QCheckBox *toUncheck3) const;
 
 
 private slots:
