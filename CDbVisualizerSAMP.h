@@ -34,7 +34,7 @@ public:
     void getProductionData();
     void setModel(QSqlQueryModel *model, QSqlQuery *query) const;
     void getTableToDisplay(QString tableName, int event) const;
-    bool getState(QCheckBox *currentCheckBox, QCheckBox *toUncheck, QCheckBox *toUncheck2, QCheckBox *toUncheck3) const;
+    void getCheckBoxState(QCheckBox *currentCheckBox, QCheckBox *toUncheck, QCheckBox *toUncheck2, QCheckBox *toUncheck3) const;
 
 
 private slots:

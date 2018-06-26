@@ -2,8 +2,6 @@
 #include "ui_CDbVisualizerSAMP.h"
 
 #include <QtSql/QSqlDatabase>
-//#include <QtSql/QSqlRelationalTableModel>
-//#include <QTableView>
 #include <QtSql/QSqlQuery>
 #include <QDebug>
 #include <QtSql/QSqlRelationalDelegate>
@@ -68,56 +66,54 @@ void CDbVisualizerSAMP::getTableToDisplay(QString tableName, int event) const
 
     l_selectQuery->exec("SELECT * FROM '"+tableName+"'");
     setModel(model, l_selectQuery);
-    //qDebug() << event;
+    delete(l_selectQuery);
     if (event == 0)
     {
         model->clear();
         ui->tableView->setModel(model);
+        //qDebug() << event;
+        delete(model);
     }
 }
 
-bool CDbVisualizerSAMP::getState(QCheckBox *currentCheckBox, QCheckBox *toUncheck, QCheckBox *toUncheck2, QCheckBox *toUncheck3) const
+void CDbVisualizerSAMP::getCheckBoxState(QCheckBox *currentCheckBox, QCheckBox *toUncheck, QCheckBox *toUncheck2, QCheckBox *toUncheck3) const
 {
-    qInfo() << "getState";
+    qInfo() << "getCheckBoxState";
 
-    bool ret = false;
+    //bool ret = false;
     if (currentCheckBox->isChecked())
     {
-        ret = true;
+        //ret = true;
         toUncheck->setChecked(false);
         toUncheck2->setChecked(false);
         toUncheck3->setChecked(false);
         //qDebug() << "Checkbox unchecked";
     }
-    return ret;
+    //return ret;
 }
 
 void CDbVisualizerSAMP::on_checkBox_stateChanged(int arg1)
 {
-    bool isChecked = getState(ui->checkBox, ui->checkBox_2, ui->checkBox_3, ui->checkBox_4);
-    if (isChecked)
-        getTableToDisplay("PRODUCTION", arg1);
+    getCheckBoxState(ui->checkBox, ui->checkBox_2, ui->checkBox_3, ui->checkBox_4);
+    getTableToDisplay("PRODUCTION", arg1);
 }
 
 void CDbVisualizerSAMP::on_checkBox_2_stateChanged(int arg1)
 {
-   bool isChecked = getState(ui->checkBox_2, ui->checkBox, ui->checkBox_3, ui->checkBox_4);
-   if (isChecked)
-        getTableToDisplay("CONTROL", arg1);
+    getCheckBoxState(ui->checkBox_2, ui->checkBox, ui->checkBox_3, ui->checkBox_4);
+    getTableToDisplay("CONTROL", arg1);
 }
 
 void CDbVisualizerSAMP::on_checkBox_3_stateChanged(int arg1)
 {
-    bool isChecked = getState(ui->checkBox_3, ui->checkBox, ui->checkBox_2, ui->checkBox_4);
-    if (isChecked)
-        getTableToDisplay("TREATMENT", arg1);
+    getCheckBoxState(ui->checkBox_3, ui->checkBox, ui->checkBox_2, ui->checkBox_4);
+    getTableToDisplay("TREATMENT", arg1);
 }
 
 void CDbVisualizerSAMP::on_checkBox_4_stateChanged(int arg1)
 {
-    bool isChecked = getState(ui->checkBox_4, ui->checkBox, ui->checkBox_2, ui->checkBox_3);
-    if (isChecked)
-        getTableToDisplay("MEASURES", arg1);
+    getCheckBoxState(ui->checkBox_4, ui->checkBox, ui->checkBox_2, ui->checkBox_3);
+    getTableToDisplay("MEASURES", arg1);
 }
 
 
